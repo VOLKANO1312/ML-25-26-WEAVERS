@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weavers · Video Intelligence</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <!-- Background -->
+  <div class="bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div id="float-layer" class="float-layer" aria-hidden="true"></div>
+  </div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true"><i data-lucide="sparkles"></i></span>
+      <div class="brand-text">
+        <div class="brand-title">Weavers</div>
+        <div class="brand-sub">Video Intelligence</div>
+      </div>
+      <span class="pill">Beta</span>
+    </div>
+
+    <div class="top-actions">
+      <button id="authBtn" class="icon-btn" onclick="toggleAuth()" title="Login">
+        <i data-lucide="log-in"></i>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle motion">
+        <i data-lucide="wand-2"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-left">
+        <div class="panel">
+          <div class="panel-head">
+            <h1 id="platform-title">YouTube Analysis</h1>
+            <p class="lead">
+              Paste a YouTube video (or channel) URL. Manual input is optional.
+            </p>
+
+            <div class="tabs">
+              <button class="active" type="button">
+                <i data-lucide="youtube"></i>
+                YouTube
+              </button>
+            </div>
+          </div>
+
+          <div class="form">
+            <label for="videoUrl">YouTube Video or Channel URL</label>
+            <input id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." />
+
+            <div class="hint">
+              <i data-lucide="info"></i>
+              If URL is provided, we fetch live stats. Otherwise we use your manual metrics.
+            </div>
+
+            <div class="grid">
+              <div>
+                <label>Views</label>
+                <input id="views" type="number" placeholder="Optional" />
+              </div>
+              <div>
+                <label>Likes</label>
+                <input id="likes" type="number" placeholder="Optional" />
+              </div>
+              <div>
+                <label>Comments</label>
+                <input id="comments" type="number" placeholder="Optional" />
+              </div>
+              <div>
+                <label>Shares</label>
+                <input id="shares" type="number" placeholder="Optional" />
+              </div>
+              <div>
+                <label>Saves</label>
+                <input id="saves" type="number" placeholder="Optional" />
+              </div>
+              <div>
+                <label>Engagement rate</label>
+                <input id="engagement" type="number" step="0.000001" placeholder="Optional" />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn" type="button" onclick="analyzeVideo()">
+                <i data-lucide="activity"></i>
+                Analyze Video
+              </button>
+
+              <button class="btn secondary" type="button" onclick="analyzeCreator()">
+                <i data-lucide="user"></i>
+                Analyze Creator
+              </button>
+            </div>
+
+            <div id="result" class="result">
+              <div class="empty">
+                <div class="empty-ico"><i data-lucide="sparkles"></i></div>
+                <div>
+                  <div class="empty-title">Ready when you are</div>
+                  <div class="empty-sub">Run an analysis to see animated metrics here.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mini-row">
+          <div class="mini">
+            <div class="mini-ico"><i data-lucide="shield-check"></i></div>
+            <div>
+              <div class="mini-title">Safe defaults</div>
+              <div class="mini-sub">Graceful fallbacks & clean UI for missing fields.</div>
+            </div>
+          </div>
+
+          <div class="mini">
+            <div class="mini-ico"><i data-lucide="gauge"></i></div>
+            <div>
+              <div class="mini-title">Better signals</div>
+              <div class="mini-sub">Virality shown as a normalized percentage.</div>
+            </div>
+          </div>
+
+          <div class="mini">
+            <div class="mini-ico"><i data-lucide="sparkle"></i></div>
+            <div>
+              <div class="mini-title">Live feel</div>
+              <div class="mini-sub">Counters, rings, and subtle motion.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-right">
+        <div class="panel side">
+          <div class="side-head">
+            <h3>Behind the scenes</h3>
+            <p class="side-sub">What Weavers does in a clean pipeline.</p>
+          </div>
+
+          <div class="steps">
+            <div class="step">
+              <div class="step-ico"><i data-lucide="download-cloud"></i></div>
+              <div>
+                <div class="step-title">Fetch</div>
+                <div class="step-sub">Live YouTube stats (views, likes, comments).</div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-ico"><i data-lucide="activity"></i></div>
+              <div>
+                <div class="step-title">Normalize</div>
+                <div class="step-sub">Virality scaled to a consistent 0–100% range.</div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-ico"><i data-lucide="brain-circuit"></i></div>
+              <div>
+                <div class="step-title">Predict</div>
+                <div class="step-sub">Recommendation probability from your ML model.</div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-ico"><i data-lucide="badge-check"></i></div>
+              <div>
+                <div class="step-title">Classify</div>
+                <div class="step-sub">Creator level inferred from historical averages.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-foot">
+            <div class="side-pill">
+              <i data-lucide="sparkles"></i> Tip: Paste a video URL for best accuracy
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      © Weavers · Data-driven video intelligence
+    </footer>
+  </main>
+
+  <script src="/static/app.js"></script>
+  <script>
+    lucide.createIcons();
+    initFloatingIcons();
+    syncAuthUI();
+  </script>
+</body>
+</html>
